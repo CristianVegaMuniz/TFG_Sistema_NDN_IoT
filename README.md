@@ -30,7 +30,7 @@ Cuando el paquete Data llegue al Consumidor, éste lo reenviará a la aplicació
 ##  Estructura de ficheros
 
 A continuación se explicará como está organizado el repositorio.
-El código de la maqueta final del proyecto está formado por las siguientes carpetas:
+El código está formado por las siguientes carpetas:
 - **App_Web:** Código de la aplicación web.
 - **Consumidor_Control:** Consumidor de la prueba de envío controlado de Interests y Datas con contenido.
 - **Consumidor_Maqueta:** Consumidor de la maqueta final.
