@@ -1,0 +1,106 @@
+ <!-- Código HTML y CSS utilizado del siguiente enlace: https://parzibyte.me/blog/2020/12/26/mostrar-temperatura-servidor-web-esp8266/
+      Código Javascript de elaboración propia -->
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sensor de temperatura ESP-NDN</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/bulma@0.9.1/css/bulma.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <script src="ndn.js"></script>
+  <body>
+    <section id="app" class="hero is-link is-fullheight">
+      <div class="hero-body" style="justify-content: center">
+        <div class="row" style="justify-content: center">
+          <div class="container">
+            <div class="columns has-text-centered">
+              <div class="column" style="margin: 60px;">
+                <h1 style="font-size: 4.5rem">Termómetro</h1>
+                <i class="fa fa-thermometer-full" id="termo" style="font-size: 5rem; margin-top:40px;"></i>
+                <h2 class="is-size-1 has-text-warning">Temperatura</h2>
+                <h2 class="is-size-1" id="temperatura">0 ºC</h2>
+                <!--<i class="fa fa-shower" style="font-size: 5rem; margin-top:40px;"></i>-->
+                <iconify-icon icon="jam:water-drop" style="color: white;font-size: 5rem; margin-top:40px;"></iconify-icon>
+                <h2 class="is-size-1 has-text-warning">Humedad</h2>
+                <h2 class="is-size-1" id="humedad">0 %</h2>
+              </div>
+              <div class="column" style="margin: 60px;">
+                <h1 style="font-size: 2.5rem">Estadísticas del consumer</h1>
+                  <i class="fa fa-upload" style="font-size: 4rem; margin-top:40px;"></i>
+                  <h2 class="is-size-4 has-text-warning">Interests enviados</h2>
+                  <h2 class="is-size-1" id="interests">0</h2>
+                  <i class="fa fa-download" style="font-size: 4rem; margin-top:40px;"></i>
+                  <h2 class="is-size-4 has-text-warning">Paquetes Data recibidos</h2>
+                  <h2 class="is-size-1" id="datas">0</h2>
+                  <i class="fa fa-cubes" style="font-size: 3rem; margin-top:40px;"></i>
+                  <i class="fa fa-percent" style="font-size: 2rem"></i>
+                  <h2 class="is-size-4 has-text-warning">Porcentaje de paquetes respondidos</h2>
+                  <h2 class="is-size-1" id="paquetes">0</h2>
+              </div> 
+            </div>
+          </div>
+        </div> 
+      </div>
+    </section>
+   
+  
+    <script>
+      const electron = require('electron');
+      const ipcRenderer = electron.ipcRenderer;
+      temp_aux = 0;
+
+      // Se recibe el dato de temperatura, y se actualiza en la web. 
+
+      ipcRenderer.on('temp',(event,data)=>{
+        document.getElementById('temperatura').innerHTML=data+" ºC";
+        temperatura = parseFloat(document.getElementById('temperatura').innerHTML);
+        
+        termoIcon = document.getElementById("termo").classList;
+        
+      // También se cambia el icono del termómetro según el valor recibido.
+
+        if (temperatura <= 5) {
+          document.getElementById('termo').className = 'fa fa-thermometer-empty';
+        } else if (temperatura > 5 && temperatura <= 16) {
+          document.getElementById('termo').className = 'fa fa-thermometer-quarter';
+        } else if (temperatura > 16 && temperatura <= 22) {
+            document.getElementById('termo').className = 'fa fa-thermometer-half';
+        } else if (temperatura > 22 && temperatura <= 27) {
+          document.getElementById('termo').className = 'fa fa-thermometer-three-quarters';
+        } else {
+          document.getElementById('termo').className = 'fa fa-thermometer-full';
+        }
+        temp_aux = temperatura;
+      });  
+
+    // Se recibe el dato de humedad y se actualiza en la web.
+
+      ipcRenderer.on('hum',(event,data)=>{
+        document.getElementById('humedad').innerHTML=data + " %";
+      });
+
+      ipcRenderer.on('int',(event,data)=>{
+        document.getElementById('interests').innerHTML=data + " Interests";
+      });
+
+      ipcRenderer.on('dat',(event,data)=>{
+        document.getElementById('datas').innerHTML=data + " Datas";
+      });
+
+      ipcRenderer.on('paq',(event,data)=>{
+        document.getElementById('paquetes').innerHTML=data + " %";
+      });
+    </script>
+
+  </body>
+</html>

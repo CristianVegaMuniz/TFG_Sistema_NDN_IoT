@@ -1,0 +1,13 @@
+{
+  "folders": [
+	{
+		"name": "Hello World",
+		"path": ".."
+	},
+	{
+		"name": "Ping Server",
+		"path": "../../Ping Server"
+	}
+],
+  "settings": {}
+}
